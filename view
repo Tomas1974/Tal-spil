@@ -1,0 +1,22 @@
+
+from taipy import Gui
+import taipy.gui.builder as tgb
+
+input_text = ""
+display_text = ""
+
+def change_text(state):
+    state.display_text = f"Her er den nye tekst: {state.input_text}"
+
+
+
+with tgb.Page() as page:
+    tgb.text("# Tryk knap", mode="md")
+    tgb.input(value = "{input_text}" )
+    tgb.button("Tryk mig", on_action=change_text)
+    tgb.text(value="{display_text}")
+    
+
+
+
+Gui(page=page).run(dark_mode=True, use_reloader=True)
