@@ -1,0 +1,13 @@
+/shelf/
+/workspace.xml
+__pycache__
+.venv
+.idea
+logs/*
+
+# Coverage files
+.coverage
+.coverage.*
+coverage.*
+htmlcov/
+
