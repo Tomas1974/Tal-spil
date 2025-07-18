@@ -8,10 +8,14 @@ input_text = ""
 display_text = ""
 image = "billeder\\bird.jpg"
 rigtig_forkert = ""
+spil_tekst = ""
+svar_knap = "Nyt spil"
+
+start_forfra = True
 
 data = {
-"name": ["Tomas", "Sussi", "Signe", "Simon"],
-"score": [6, 5, 4, 3]
+"Navn": ["Tomas", "Sussi", "Signe", "Simon"],
+"Score": [6, 5, 4, 3]
 
 }
 
@@ -24,45 +28,68 @@ def play_music(mp3File):
     pygame.mixer.init()
     pygame.mixer.music.load(mp3File)
     pygame.mixer.music.play()
+    
 
 def spil(state):
     
     global counter
+    global start_forfra
+
+    state.svar_knap = "Svar"
     
-    if counter == SEJRS_ANTAL:
+    
+    if counter == SEJRS_ANTAL or start_forfra:
+           
+           
            nyt_spil(state)
+
                        
     else:
         
-        if int(state.tal) == int(state.input_text):
-            
-            
-            state.tal = random.randint(1,100)
-            print(state.tal)
-            
-            counter += 1
-            state.rigtig_forkert = f"Rigtigt {counter}"
-            play_music("lyd\\correct.mp3")
-            state.image = "billeder\\rigtig.gif"
-            
+        try:
+            indtastet_værdi = int(state.input_text)
+           
 
-            
-        else:
-            state.rigtig_forkert = f"Forkert"
-            play_music("lyd\\forkert.mp3")
-            state.image = "billeder\\forkert.gif"
-            counter = 0
-            state.gennemløb = 0
-            
-            
+            if state.tal == indtastet_værdi:
+                
+                
+                
+                
+                
+                counter += 1
+                state.rigtig_forkert = f"Rigtige: {counter}. Tal: {state.tal}"
+                play_music("lyd\\correct.mp3")
+                state.image = "billeder\\rigtig.gif"
+                state.spil_tekst = f"Spørgsmål {counter}"
+                state.tal = random.randint(1,100)
+                print(state.tal)
+                
+
+                
+            else:
+                state.rigtig_forkert = f"Forkert {state.tal}"
+                play_music("lyd\\forkert.mp3")
+                state.image = "billeder\\forkert.gif"
+                counter = 0
+                
+                state.svar_knap = "Nyt spil"
+                start_forfra = True
         
-        if counter == SEJRS_ANTAL:
-            state.rigtig_forkert = f"Du har vundet"
-            play_music("lyd\\finish.mp3")
-            state.image = "billeder\\Finish.png"
+    
+                
+                
             
-            state.gennemløb += 1
-            
+            if counter == SEJRS_ANTAL:
+                state.svar_knap = "Fortsæt"
+                state.rigtig_forkert = f"Du har vundet"
+                play_music("lyd\\finish.mp3")
+                state.image = "billeder\\Finish.png"
+                
+                state.gennemløb += 1
+        
+        except ValueError:
+            state.rigtig_forkert = f"Indtast et tal"
+
 
     state.input_text = ""
 
@@ -72,13 +99,21 @@ def spil(state):
          
 def nyt_spil(state):
     global counter
+    global start_forfra
 
+    state.spil_tekst = f"Spørgsmål 1"
     state.tal = random.randint(1,100)
     print(state.tal)
     state.rigtig_forkert = ""
     counter = 0 
-    state.gennemløb = 0
     state.image = "billeder\\bird.jpg"
+
+    if start_forfra:
+        state.gennemløb = 0
+        
+    
+    start_forfra = False
+    
 
 
 
@@ -93,11 +128,12 @@ with tgb.Page() as page:
             pass
 
         with tgb.layout("100"):
+            tgb.text("{spil_tekst}")
             with tgb.layout("30 10 20 40"):
                 tgb.input(value = "{input_text}" )
-                tgb.button("Svar", on_action=spil)
+                tgb.button("{svar_knap}", on_action=spil)
                 tgb.button("Gentag lyd", on_action=spil)
-                tgb.button("Nyt spil", on_action=nyt_spil)
+                
             
             tgb.text(value="{rigtig_forkert}")
             tgb.image("{image}")  # Assumes bird.jpg is in the same directory    
@@ -106,7 +142,7 @@ with tgb.Page() as page:
         with tgb.layout("100"):
                 with tgb.layout("30 10 20 40"):
                     tgb.button("Nulstil", on_action=spil)
-                    tgb.text("{gennemløb}")
+                    tgb.text("Score: {gennemløb}")
                 tgb.table("{data}")
 
 
