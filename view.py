@@ -1,7 +1,7 @@
 import taipy.gui.builder as tgb
 import random
-from playsound import playsound
-import pygame
+from utilities import play_music
+from score import score_tabel, tjeck_score
 
 SEJRS_ANTAL = 7
 input_text = ""
@@ -12,22 +12,14 @@ spil_tekst = ""
 svar_knap = "Nyt spil"
 
 start_forfra = True
+gentag_activ=False
 
-data = {
-"Navn": ["Tomas", "Sussi", "Signe", "Simon"],
-"Score": [6, 5, 4, 3]
 
-}
 
 tal = 0
 counter = 0
-gennemløb = 0
+score = 0
 
-
-def play_music(mp3File):
-    pygame.mixer.init()
-    pygame.mixer.music.load(mp3File)
-    pygame.mixer.music.play()
     
 
 def spil(state):
@@ -38,7 +30,7 @@ def spil(state):
     state.svar_knap = "Svar"
     
     
-    if counter == SEJRS_ANTAL or start_forfra:
+    if counter == SEJRS_ANTAL+1 or start_forfra:
            
            
            nyt_spil(state)
@@ -46,8 +38,13 @@ def spil(state):
                        
     else:
         
+        
+
         try:
             indtastet_værdi = int(state.input_text)
+            state.gentag_activ=True
+
+            
            
 
             if state.tal == indtastet_værdi:
@@ -55,14 +52,17 @@ def spil(state):
                 
                 
                 
-                
+                state.rigtig_forkert = "Rigtige"
                 counter += 1
-                state.rigtig_forkert = f"Rigtige: {counter}. Tal: {state.tal}"
-                play_music("lyd\\correct.mp3")
-                state.image = "billeder\\rigtig.gif"
+                                
                 state.spil_tekst = f"Spørgsmål {counter}"
+                state.image = "billeder\\rigtig.gif"
+                
                 state.tal = random.randint(1,100)
-                print(state.tal)
+                play_music(f"lyd\\{state.tal}.mp3")
+                
+
+                
                 
 
                 
@@ -71,21 +71,25 @@ def spil(state):
                 play_music("lyd\\forkert.mp3")
                 state.image = "billeder\\forkert.gif"
                 counter = 0
-                
+                state.score_tabel = tjeck_score(state.score)
                 state.svar_knap = "Nyt spil"
                 start_forfra = True
+                state.gentag_activ=False
         
     
                 
                 
             
-            if counter == SEJRS_ANTAL:
+            if counter == SEJRS_ANTAL+1:
                 state.svar_knap = "Fortsæt"
-                state.rigtig_forkert = f"Du har vundet"
+                state.spil_tekst = "Runde gennemført"
+                state.gentag_activ=False
+                
                 play_music("lyd\\finish.mp3")
                 state.image = "billeder\\Finish.png"
                 
-                state.gennemløb += 1
+                state.score += 1
+                state.rigtig_forkert = f"Score {state.score}"
         
         except ValueError:
             state.rigtig_forkert = f"Indtast et tal"
@@ -103,20 +107,22 @@ def nyt_spil(state):
 
     state.spil_tekst = f"Spørgsmål 1"
     state.tal = random.randint(1,100)
+    state.gentag_activ=True
+    play_music(f"lyd\\{state.tal}.mp3")
     print(state.tal)
     state.rigtig_forkert = ""
-    counter = 0 
+    counter = 1 
     state.image = "billeder\\bird.jpg"
 
     if start_forfra:
-        state.gennemløb = 0
+        state.score = 0
         
     
     start_forfra = False
     
 
-
-
+def gentag(state):
+    play_music(f"lyd\\{state.tal}.mp3")
 
 
 with tgb.Page() as page:
@@ -130,9 +136,9 @@ with tgb.Page() as page:
         with tgb.layout("100"):
             tgb.text("{spil_tekst}")
             with tgb.layout("30 10 20 40"):
-                tgb.input(value = "{input_text}" )
+                tgb.input("{input_text}", on_action=spil, action_keys=["ENTER"] )
                 tgb.button("{svar_knap}", on_action=spil)
-                tgb.button("Gentag lyd", on_action=spil)
+                tgb.button("Gentag lyd", on_action=gentag, active = "{gentag_activ}")
                 
             
             tgb.text(value="{rigtig_forkert}")
@@ -141,9 +147,9 @@ with tgb.Page() as page:
 
         with tgb.layout("100"):
                 with tgb.layout("30 10 20 40"):
-                    tgb.button("Nulstil", on_action=spil)
-                    tgb.text("Score: {gennemløb}")
-                tgb.table("{data}")
+                    #tgb.button("Nulstil", on_action=spil)
+                    tgb.text("Score: {score}")
+                tgb.table("{score_tabel}")
 
 
 
