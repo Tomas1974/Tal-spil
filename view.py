@@ -45,19 +45,17 @@ def spil(state):
             if state.tal == indtastet_værdi: #Rigtig besvarelse
                                 
                 sejr_antal += 1
-                state.rigtig_forkert = "Rigtige"
-                state.image = "billeder\\rigtig.gif"
+                
+                spørgsmål_respons(state, "Rigtige", "billeder\\rigtig.gif")
                 nyt_spørgsmål(state)
 
 
                 
-
-                
             else:
                 
-                sejr_antal = 0
-                state.rigtig_forkert = f"Forkert {state.tal}" #Forkert besvarelse
-                state.image = "billeder\\forkert.gif"
+                sejr_antal = 0   #Forkert besvarelse
+                spørgsmål_respons(state, f"Forkert {state.tal}", "billeder\\forkert.gif")
+                                                
                 play_music("lyd\\forkert.mp3")
                 
                 state.score_tabel = tjeck_score(state.score)
@@ -65,26 +63,27 @@ def spil(state):
                 start_forfra = True
                 state.aktiv_gentag_lyd=False
         
-    
-                
-                
+                                    
             
             if sejr_antal == sejrsantal_for_scoring + 1:
+                
+                state.score += 1
+                spørgsmål_respons(state, f"Score {state.score}" , "billeder\\Finish.png")
+
+
                 state.svar_knap = "Fortsæt"
                 state.spil_tekst = "Runde gennemført"
                 state.aktiv_gentag_lyd=False
-                
                 play_music("lyd\\finish.mp3")
-                state.image = "billeder\\Finish.png"
                 
-                state.score += 1
-                state.rigtig_forkert = f"Score {state.score}"
-        
+                
+                
+                
         except ValueError:
             state.rigtig_forkert = f"Indtast et tal"
 
 
-    
+
          
 def nyt_spil(state):
     global sejr_antal
@@ -93,10 +92,8 @@ def nyt_spil(state):
     
     sejr_antal = 1 
     nyt_spørgsmål(state)
-    
-    
-    state.rigtig_forkert = ""
-    state.image = "billeder\\bird.jpg"
+    spørgsmål_respons(state, "", "billeder\\bird.jpg")
+      
 
     if start_forfra:
         state.score = 0
@@ -104,6 +101,12 @@ def nyt_spil(state):
     
     start_forfra = False
     
+
+def spørgsmål_respons(state, rigtig_forkert, image):
+    state.rigtig_forkert = rigtig_forkert
+    state.image = image
+
+
 def nyt_spørgsmål(state):
     state.input_text = ""
     state.spil_tekst = f"Spørgsmål {sejr_antal}"
