@@ -25,9 +25,7 @@ score = 0
 
 def spil(state):
     
-    global sejrs_antal
-    global start_forfra #Hvis man svarer forkert eller lige startet
-       
+           
     
     if sejrs_antal == sejrsantal_for_scoring+1 or start_forfra:
            nyt_spil(state)
@@ -42,45 +40,60 @@ def spil(state):
 
             if state.spørgsmålstal == indtastet_værdi: #Rigtig besvarelse
                                 
-                sejrs_antal += 1
+                rigtig_besvarelse(state)
                 
-                spørgsmål_respons(state, "Rigtige", "billeder\\rigtig.gif")
-                nyt_spørgsmål(state)
-
-
                 
             else:
                 
-                sejrs_antal = 0   #Forkert besvarelse
-                spørgsmål_respons(state, f"Forkert {state.spørgsmålstal}", "billeder\\forkert.gif")
-                                                
-                play_music("lyd\\forkert.mp3")
+                forkert_besvarelse(state)
                 
-                state.score_tabel = tjeck_score(state.score)
-                state.svar_knap = "Nyt spil"
-                start_forfra = True
-                state.aktiv_gentag_lyd=False
         
                                     
             
             if sejrs_antal == sejrsantal_for_scoring + 1:
-                
-                state.score += 1
-                spørgsmål_respons(state, f"Score {state.score}" , "billeder\\Finish.png")
-
-
-                state.svar_knap = "Fortsæt"
-                state.spil_tekst = "Runde gennemført"
-                state.aktiv_gentag_lyd=False
-                play_music("lyd\\finish.mp3")
-                
-                
-                
+                sejr(state)
+                                              
+                                
                 
         except ValueError:
             state.rigtig_forkert = f"Indtast et tal"
 
 
+def rigtig_besvarelse(state):
+    global sejrs_antal
+      
+    sejrs_antal += 1               
+    spørgsmål_respons(state, "Rigtige", "billeder\\rigtig.gif")
+    nyt_spørgsmål(state)
+
+
+def forkert_besvarelse(state):
+
+    global sejrs_antal
+    global start_forfra #Hvis man svarer forkert eller lige startet
+    
+    
+    sejrs_antal = 0   #Forkert besvarelse
+    spørgsmål_respons(state, f"Forkert {state.spørgsmålstal}", "billeder\\forkert.gif")
+                                                
+    play_music("lyd\\forkert.mp3")
+                
+    state.score_tabel = tjeck_score(state.score)
+    state.svar_knap = "Nyt spil"
+    start_forfra = True
+    state.aktiv_gentag_lyd=False
+
+
+def sejr(state):
+    
+    state.score += 1
+    spørgsmål_respons(state, f"Score {state.score}" , "billeder\\Finish.png")
+
+
+    state.svar_knap = "Fortsæt"
+    state.spil_tekst = "Runde gennemført"
+    state.aktiv_gentag_lyd=False
+    play_music("lyd\\finish.mp3")
 
          
 def nyt_spil(state):
