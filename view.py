@@ -51,7 +51,7 @@ def spil(state):
                 
             else:
                 
-                sejr_antal = 0   #Forkert besvarelse
+                sejrs_antal = 0   #Forkert besvarelse
                 spørgsmål_respons(state, f"Forkert {state.spørgsmålstal}", "billeder\\forkert.gif")
                                                 
                 play_music("lyd\\forkert.mp3")
@@ -141,7 +141,6 @@ with tgb.Page() as page:
 
         with tgb.layout("100"):
                 with tgb.layout("30 10 20 40"):
-                    #tgb.button("Nulstil", on_action=spil)
                     tgb.text("Score: {score}")
                 tgb.table("{score_tabel}")
 
