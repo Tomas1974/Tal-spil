@@ -17,7 +17,7 @@ aktiv_gentag_lyd=False
 
 
 
-tal = 0
+spørgsmålstal = 0
 sejr_antal = 0
 score = 0
 
@@ -40,7 +40,7 @@ def spil(state):
             indtastet_værdi = int(state.input_text)
                                    
 
-            if state.tal == indtastet_værdi: #Rigtig besvarelse
+            if state.spørgsmålstal == indtastet_værdi: #Rigtig besvarelse
                                 
                 sejr_antal += 1
                 
@@ -52,7 +52,7 @@ def spil(state):
             else:
                 
                 sejr_antal = 0   #Forkert besvarelse
-                spørgsmål_respons(state, f"Forkert {state.tal}", "billeder\\forkert.gif")
+                spørgsmål_respons(state, f"Forkert {state.spørgsmålstal}", "billeder\\forkert.gif")
                                                 
                 play_music("lyd\\forkert.mp3")
                 
@@ -109,14 +109,14 @@ def nyt_spørgsmål(state):
     state.input_text = ""
     state.svar_knap = "Svar"
     state.spil_tekst = f"Spørgsmål {sejr_antal}"
-    state.tal = random.randint(1,100)
-    play_music(f"lyd\\{state.tal}.mp3")
+    state.spørgsmålstal = random.randint(1,100)
+    play_music(f"lyd\\{state.spørgsmålstal}.mp3")
     state.aktiv_gentag_lyd=True
 
 
 
 def gentag(state):
-    play_music(f"lyd\\{state.tal}.mp3")
+    play_music(f"lyd\\{state.spørgsmålstal}.mp3")
 
 
 with tgb.Page() as page:
