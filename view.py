@@ -18,18 +18,18 @@ aktiv_gentag_lyd=False
 
 
 spørgsmålstal = 0
-sejr_antal = 0
+sejrs_antal = 0
 score = 0
 
     
 
 def spil(state):
     
-    global sejr_antal
+    global sejrs_antal
     global start_forfra #Hvis man svarer forkert eller lige startet
        
     
-    if sejr_antal == sejrsantal_for_scoring+1 or start_forfra:
+    if sejrs_antal == sejrsantal_for_scoring+1 or start_forfra:
            nyt_spil(state)
 
                        
@@ -42,7 +42,7 @@ def spil(state):
 
             if state.spørgsmålstal == indtastet_værdi: #Rigtig besvarelse
                                 
-                sejr_antal += 1
+                sejrs_antal += 1
                 
                 spørgsmål_respons(state, "Rigtige", "billeder\\rigtig.gif")
                 nyt_spørgsmål(state)
@@ -63,7 +63,7 @@ def spil(state):
         
                                     
             
-            if sejr_antal == sejrsantal_for_scoring + 1:
+            if sejrs_antal == sejrsantal_for_scoring + 1:
                 
                 state.score += 1
                 spørgsmål_respons(state, f"Score {state.score}" , "billeder\\Finish.png")
@@ -84,11 +84,11 @@ def spil(state):
 
          
 def nyt_spil(state):
-    global sejr_antal
+    global sejrs_antal
     global start_forfra
 
     
-    sejr_antal = 1 
+    sejrs_antal = 1 
     nyt_spørgsmål(state)
     spørgsmål_respons(state, "", "billeder\\bird.jpg")
     
@@ -108,7 +108,7 @@ def nyt_spørgsmål(state):
     
     state.input_text = ""
     state.svar_knap = "Svar"
-    state.spil_tekst = f"Spørgsmål {sejr_antal}"
+    state.spil_tekst = f"Spørgsmål {sejrs_antal}"
     state.spørgsmålstal = random.randint(1,100)
     play_music(f"lyd\\{state.spørgsmålstal}.mp3")
     state.aktiv_gentag_lyd=True
