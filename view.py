@@ -93,8 +93,8 @@ def nyt_spil(state):
     sejr_antal = 1 
     nyt_spørgsmål(state)
     spørgsmål_respons(state, "", "billeder\\bird.jpg")
-      
-
+    
+    
     if start_forfra:
         state.score = 0
         
