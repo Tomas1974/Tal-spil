@@ -29,34 +29,25 @@ def spil(state):
     
     if sejrs_antal == sejrsantal_for_scoring+1 or start_forfra:
            nyt_spil(state)
-
                        
     else:
                 
-
         try:
             indtastet_værdi = int(state.input_text)
-                                   
-
+                
             if state.spørgsmålstal == indtastet_værdi: #Rigtig besvarelse
-                                
                 rigtig_besvarelse(state)
                 
-                
             else:
-                
                 forkert_besvarelse(state)
                 
-        
-                                    
             
             if sejrs_antal == sejrsantal_for_scoring + 1:
                 sejr(state)
-                                              
-                                
                 
         except ValueError:
             state.rigtig_forkert = f"Indtast et tal"
+
 
 
 def rigtig_besvarelse(state):
