@@ -26,10 +26,8 @@ score = 0
 def spil(state):
     
     global sejr_antal
-    global start_forfra
-
-    state.svar_knap = "Svar"
-    
+    global start_forfra #Hvis man svarer forkert eller lige startet
+       
     
     if sejr_antal == sejrsantal_for_scoring+1 or start_forfra:
            nyt_spil(state)
@@ -97,9 +95,8 @@ def nyt_spil(state):
     
     if start_forfra:
         state.score = 0
+        start_forfra = False
         
-    
-    start_forfra = False
     
 
 def spørgsmål_respons(state, rigtig_forkert, image):
@@ -108,7 +105,9 @@ def spørgsmål_respons(state, rigtig_forkert, image):
 
 
 def nyt_spørgsmål(state):
+    
     state.input_text = ""
+    state.svar_knap = "Svar"
     state.spil_tekst = f"Spørgsmål {sejr_antal}"
     state.tal = random.randint(1,100)
     play_music(f"lyd\\{state.tal}.mp3")
