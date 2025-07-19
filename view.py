@@ -4,7 +4,7 @@ from utilities import play_music
 from score import score_tabel, tjeck_score
 import time
 
-SEJRS_ANTAL = 7
+sejrsantal_for_scoring = 7
 input_text = ""
 display_text = ""
 image = "billeder\\bird.jpg"
@@ -18,41 +18,34 @@ aktiv_gentag_lyd=False
 
 
 tal = 0
-counter = 0
+sejr_antal = 0
 score = 0
 
     
 
 def spil(state):
     
-    global counter
+    global sejr_antal
     global start_forfra
 
     state.svar_knap = "Svar"
     
     
-    if counter == SEJRS_ANTAL+1 or start_forfra:
-           
-           
+    if sejr_antal == sejrsantal_for_scoring+1 or start_forfra:
            nyt_spil(state)
 
                        
     else:
-        
-        
+                
 
         try:
             indtastet_værdi = int(state.input_text)
-            state.aktiv_gentag_lyd=True
+                                   
 
-            
-           
-
-            if state.tal == indtastet_værdi:
-                
-                
+            if state.tal == indtastet_værdi: #Rigtig besvarelse
+                                
+                sejr_antal += 1
                 state.rigtig_forkert = "Rigtige"
-                counter += 1
                 state.image = "billeder\\rigtig.gif"
                 nyt_spørgsmål(state)
 
@@ -61,10 +54,12 @@ def spil(state):
 
                 
             else:
-                state.rigtig_forkert = f"Forkert {state.tal}"
-                play_music("lyd\\forkert.mp3")
+                
+                sejr_antal = 0
+                state.rigtig_forkert = f"Forkert {state.tal}" #Forkert besvarelse
                 state.image = "billeder\\forkert.gif"
-                counter = 0
+                play_music("lyd\\forkert.mp3")
+                
                 state.score_tabel = tjeck_score(state.score)
                 state.svar_knap = "Nyt spil"
                 start_forfra = True
@@ -74,7 +69,7 @@ def spil(state):
                 
                 
             
-            if counter == SEJRS_ANTAL+1:
+            if sejr_antal == sejrsantal_for_scoring + 1:
                 state.svar_knap = "Fortsæt"
                 state.spil_tekst = "Runde gennemført"
                 state.aktiv_gentag_lyd=False
@@ -89,17 +84,16 @@ def spil(state):
             state.rigtig_forkert = f"Indtast et tal"
 
 
-    state.input_text = ""
-
-
+    
          
 def nyt_spil(state):
-    global counter
+    global sejr_antal
     global start_forfra
 
     
-    counter = 1 
+    sejr_antal = 1 
     nyt_spørgsmål(state)
+    
     
     state.rigtig_forkert = ""
     state.image = "billeder\\bird.jpg"
@@ -111,7 +105,8 @@ def nyt_spil(state):
     start_forfra = False
     
 def nyt_spørgsmål(state):
-    state.spil_tekst = f"Spørgsmål {counter}"
+    state.input_text = ""
+    state.spil_tekst = f"Spørgsmål {sejr_antal}"
     state.tal = random.randint(1,100)
     play_music(f"lyd\\{state.tal}.mp3")
     state.aktiv_gentag_lyd=True
