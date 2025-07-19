@@ -2,6 +2,7 @@ import taipy.gui.builder as tgb
 import random
 from utilities import play_music
 from score import score_tabel, tjeck_score
+import time
 
 SEJRS_ANTAL = 7
 input_text = ""
@@ -12,7 +13,7 @@ spil_tekst = ""
 svar_knap = "Nyt spil"
 
 start_forfra = True
-gentag_activ=False
+aktiv_gentag_lyd=False
 
 
 
@@ -42,7 +43,7 @@ def spil(state):
 
         try:
             indtastet_værdi = int(state.input_text)
-            state.gentag_activ=True
+            state.aktiv_gentag_lyd=True
 
             
            
@@ -50,19 +51,12 @@ def spil(state):
             if state.tal == indtastet_værdi:
                 
                 
-                
-                
                 state.rigtig_forkert = "Rigtige"
                 counter += 1
-                                
-                state.spil_tekst = f"Spørgsmål {counter}"
                 state.image = "billeder\\rigtig.gif"
-                
-                state.tal = random.randint(1,100)
-                play_music(f"lyd\\{state.tal}.mp3")
-                
+                nyt_spørgsmål(state)
 
-                
+
                 
 
                 
@@ -74,7 +68,7 @@ def spil(state):
                 state.score_tabel = tjeck_score(state.score)
                 state.svar_knap = "Nyt spil"
                 start_forfra = True
-                state.gentag_activ=False
+                state.aktiv_gentag_lyd=False
         
     
                 
@@ -83,7 +77,7 @@ def spil(state):
             if counter == SEJRS_ANTAL+1:
                 state.svar_knap = "Fortsæt"
                 state.spil_tekst = "Runde gennemført"
-                state.gentag_activ=False
+                state.aktiv_gentag_lyd=False
                 
                 play_music("lyd\\finish.mp3")
                 state.image = "billeder\\Finish.png"
@@ -98,20 +92,16 @@ def spil(state):
     state.input_text = ""
 
 
-
-
          
 def nyt_spil(state):
     global counter
     global start_forfra
 
-    state.spil_tekst = f"Spørgsmål 1"
-    state.tal = random.randint(1,100)
-    state.gentag_activ=True
-    play_music(f"lyd\\{state.tal}.mp3")
-    print(state.tal)
-    state.rigtig_forkert = ""
+    
     counter = 1 
+    nyt_spørgsmål(state)
+    
+    state.rigtig_forkert = ""
     state.image = "billeder\\bird.jpg"
 
     if start_forfra:
@@ -120,6 +110,13 @@ def nyt_spil(state):
     
     start_forfra = False
     
+def nyt_spørgsmål(state):
+    state.spil_tekst = f"Spørgsmål {counter}"
+    state.tal = random.randint(1,100)
+    play_music(f"lyd\\{state.tal}.mp3")
+    state.aktiv_gentag_lyd=True
+
+
 
 def gentag(state):
     play_music(f"lyd\\{state.tal}.mp3")
@@ -138,7 +135,7 @@ with tgb.Page() as page:
             with tgb.layout("30 10 20 40"):
                 tgb.input("{input_text}", on_action=spil, action_keys=["ENTER"] )
                 tgb.button("{svar_knap}", on_action=spil)
-                tgb.button("Gentag lyd", on_action=gentag, active = "{gentag_activ}")
+                tgb.button("Gentag lyd", on_action=gentag, active = "{aktiv_gentag_lyd}")
                 
             
             tgb.text(value="{rigtig_forkert}")
