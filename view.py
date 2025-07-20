@@ -27,7 +27,7 @@ def spil(state):
     
            
     
-    if sejrs_antal == sejrsantal_for_scoring+1 or start_forfra:
+    if state.sejrs_antal == sejrsantal_for_scoring+1 or state.start_forfra:
            nyt_spil(state)
                        
     else:
@@ -42,7 +42,7 @@ def spil(state):
                 forkert_besvarelse(state)
                 
             
-            if sejrs_antal == sejrsantal_for_scoring + 1:
+            if state.sejrs_antal == sejrsantal_for_scoring + 1:
                 sejr(state)
                 
         except ValueError:
@@ -51,27 +51,22 @@ def spil(state):
 
 
 def rigtig_besvarelse(state):
-    global sejrs_antal
       
-    sejrs_antal += 1               
+    state.sejrs_antal += 1               
     spørgsmål_respons(state, "Rigtige", "billeder\\rigtig.gif")
     nyt_spørgsmål(state)
 
 
 def forkert_besvarelse(state):
 
-    global sejrs_antal
-    global start_forfra #Hvis man svarer forkert eller lige startet
-    
-    
-    sejrs_antal = 0   #Forkert besvarelse
+    state.sejrs_antal = 0   #Forkert besvarelse
     spørgsmål_respons(state, f"Forkert {state.spørgsmålstal}", "billeder\\forkert.gif")
                                                 
     play_music("lyd\\forkert.mp3")
                 
     state.score_tabel = tjeck_score(state.score)
     state.svar_knap = "Nyt spil"
-    start_forfra = True
+    state.start_forfra = True
     state.aktiv_gentag_lyd=False
 
 
@@ -88,18 +83,15 @@ def sejr(state):
 
          
 def nyt_spil(state):
-    global sejrs_antal
-    global start_forfra
-
     
-    sejrs_antal = 1 
+    state.sejrs_antal = 1 
     nyt_spørgsmål(state)
     spørgsmål_respons(state, "", "billeder\\bird.jpg")
     
     
-    if start_forfra:
+    if state.start_forfra:
         state.score = 0
-        start_forfra = False
+        state.start_forfra = False
         
     
 
@@ -112,7 +104,7 @@ def nyt_spørgsmål(state):
     
     state.input_text = ""
     state.svar_knap = "Svar"
-    state.spil_tekst = f"Spørgsmål {sejrs_antal}"
+    state.spil_tekst = f"Spørgsmål {state.sejrs_antal}"
     state.spørgsmålstal = random.randint(1,100)
     play_music(f"lyd\\{state.spørgsmålstal}.mp3")
     state.aktiv_gentag_lyd=True
