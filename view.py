@@ -2,7 +2,7 @@ import taipy.gui.builder as tgb
 import random
 from utilities import play_music
 from score import score_tabel, tjeck_score
-import time
+
 
 sejrsantal_for_score = 4
 input_text = ""
@@ -100,7 +100,8 @@ def nyt_spil(state):
     print(state.score)
     if state.score % 2==0:
         state.spørgsmålsværdi = [] 
-        state.spørgsmålsværdi = [random.randint(1, 100) for _ in range(1,sejrsantal_for_score+1)]
+        #state.spørgsmålsværdi = [random.randint(1, 100) for _ in range(1,sejrsantal_for_score+1)]
+        state.spørgsmålsværdi = [1, 10, 12, 100]
 
     print(state.spørgsmålsværdi)
     
@@ -127,7 +128,8 @@ def nyt_spørgsmål(state):
     else:
         if state.spørgsmålsværdi[state.sejrs_antal-1] < 10:
             state.spil_tekst = f"Spørgsmål {state.sejrs_antal}: X"
-        elif 10 < state.spørgsmålsværdi[state.sejrs_antal-1] or state.spørgsmålsværdi[state.sejrs_antal-1] < 100:
+        elif 9 < state.spørgsmålsværdi[state.sejrs_antal-1] and state.spørgsmålsværdi[state.sejrs_antal-1] < 100:
+             print(state.spørgsmålsværdi[state.sejrs_antal-1])
              state.spil_tekst = f"Spørgsmål {state.sejrs_antal}: XX"
         else:
              state.spil_tekst = f"Spørgsmål {state.sejrs_antal}: XXX"
