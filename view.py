@@ -4,7 +4,7 @@ from utilities import play_music
 from score import score_tabel, tjeck_score
 import time
 
-sejrsantal_for_scoring = 7
+sejrsantal_for_score = 7
 input_text = ""
 display_text = ""
 image = "billeder\\bird.jpg"
@@ -17,7 +17,9 @@ aktiv_gentag_lyd=False
 
 
 
-spørgsmålstal = 0
+spørgsmålsværdi = []
+
+
 sejrs_antal = 0
 score = 0
 
@@ -25,25 +27,27 @@ score = 0
 
 def spil(state):
     
+    
            
     
-    if state.sejrs_antal == sejrsantal_for_scoring+1 or state.start_forfra:
+    if state.sejrs_antal == sejrsantal_for_score+1 or state.start_forfra:
            nyt_spil(state)
                        
     else:
+        
+        
                 
         try:
             indtastet_værdi = int(state.input_text)
+            state.input_text = ""
                 
-            if state.spørgsmålstal == indtastet_værdi: #Rigtig besvarelse
+            if state.spørgsmålsværdi[state.sejrs_antal-1] == indtastet_værdi: #Rigtig besvarelse
                 rigtig_besvarelse(state)
                 
             else:
                 forkert_besvarelse(state)
                 
             
-            if state.sejrs_antal == sejrsantal_for_scoring + 1:
-                sejr(state)
                 
         except ValueError:
             state.rigtig_forkert = f"Indtast et tal"
@@ -52,15 +56,20 @@ def spil(state):
 
 def rigtig_besvarelse(state):
       
-    state.sejrs_antal += 1               
-    spørgsmål_respons(state, "Rigtige", "billeder\\rigtig.gif")
-    nyt_spørgsmål(state)
+    state.sejrs_antal += 1
+
+    if state.sejrs_antal == sejrsantal_for_score+1:
+                sejr(state)
+    else:               
+        spørgsmål_respons(state, "Rigtige", "billeder\\rigtig.gif")
+        nyt_spørgsmål(state)
 
 
 def forkert_besvarelse(state):
 
+
     state.sejrs_antal = 0   #Forkert besvarelse
-    spørgsmål_respons(state, f"Forkert {state.spørgsmålstal}", "billeder\\forkert.gif")
+    spørgsmål_respons(state, f"Forkert {state.spørgsmålsværdi[state.sejrs_antal-1]}", "billeder\\forkert.gif")
                                                 
     play_music("lyd\\forkert.mp3")
                 
@@ -84,7 +93,16 @@ def sejr(state):
          
 def nyt_spil(state):
     
-    state.sejrs_antal = 1 
+    state.spørgsmålsværdi = [] 
+    state.sejrs_antal=1
+    
+    for number in range(1,sejrsantal_for_score+1):
+        spørgsmål = random.randint(1,100)
+        state.spørgsmålsværdi.append(spørgsmål)
+    
+    print(state.spørgsmålsværdi)
+    
+        
     nyt_spørgsmål(state)
     spørgsmål_respons(state, "", "billeder\\bird.jpg")
     
@@ -102,17 +120,15 @@ def spørgsmål_respons(state, rigtig_forkert, image):
 
 def nyt_spørgsmål(state):
     
-    state.input_text = ""
     state.svar_knap = "Svar"
     state.spil_tekst = f"Spørgsmål {state.sejrs_antal}"
-    state.spørgsmålstal = random.randint(1,100)
-    play_music(f"lyd\\{state.spørgsmålstal}.mp3")
+    play_music(f"lyd\\{state.spørgsmålsværdi[state.sejrs_antal-1]}.mp3")
     state.aktiv_gentag_lyd=True
 
 
 
 def gentag(state):
-    play_music(f"lyd\\{state.spørgsmålstal}.mp3")
+    play_music(f"lyd\\{state.spørgsmålsværdi[state.sejrs_antal-1]}.mp3")
 
 
 with tgb.Page() as page:

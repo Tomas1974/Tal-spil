@@ -1,7 +1,7 @@
 from taipy import Gui 
 from view import page
+import random
     
-
 
 
 
