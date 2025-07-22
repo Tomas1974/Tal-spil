@@ -4,7 +4,7 @@ from utilities import play_music
 from score import score_tabel, tjeck_score
 import time
 
-sejrsantal_for_score = 7
+sejrsantal_for_score = 4
 input_text = ""
 display_text = ""
 image = "billeder\\bird.jpg"
@@ -74,6 +74,7 @@ def forkert_besvarelse(state):
     play_music("lyd\\forkert.mp3")
                 
     state.score_tabel = tjeck_score(state.score)
+    state.score = 0
     state.svar_knap = "Nyt spil"
     state.start_forfra = True
     state.aktiv_gentag_lyd=False
@@ -93,13 +94,14 @@ def sejr(state):
          
 def nyt_spil(state):
     
-    state.spørgsmålsværdi = [] 
+    
     state.sejrs_antal=1
     
-    for number in range(1,sejrsantal_for_score+1):
-        spørgsmål = random.randint(1,100)
-        state.spørgsmålsværdi.append(spørgsmål)
-    
+    print(state.score)
+    if state.score % 2==0:
+        state.spørgsmålsværdi = [] 
+        state.spørgsmålsværdi = [random.randint(1, 100) for _ in range(1,sejrsantal_for_score+1)]
+
     print(state.spørgsmålsværdi)
     
         
@@ -108,7 +110,6 @@ def nyt_spil(state):
     
     
     if state.start_forfra:
-        state.score = 0
         state.start_forfra = False
         
     
@@ -121,7 +122,16 @@ def spørgsmål_respons(state, rigtig_forkert, image):
 def nyt_spørgsmål(state):
     
     state.svar_knap = "Svar"
-    state.spil_tekst = f"Spørgsmål {state.sejrs_antal}"
+    if state.score % 2==0:
+         state.spil_tekst = f"Spørgsmål {state.sejrs_antal}:  {state.spørgsmålsværdi[state.sejrs_antal-1]}"
+    else:
+        if state.spørgsmålsværdi[state.sejrs_antal-1] < 10:
+            state.spil_tekst = f"Spørgsmål {state.sejrs_antal}: X"
+        elif 10 < state.spørgsmålsværdi[state.sejrs_antal-1] or state.spørgsmålsværdi[state.sejrs_antal-1] < 100:
+             state.spil_tekst = f"Spørgsmål {state.sejrs_antal}: XX"
+        else:
+             state.spil_tekst = f"Spørgsmål {state.sejrs_antal}: XXX"
+    
     play_music(f"lyd\\{state.spørgsmålsværdi[state.sejrs_antal-1]}.mp3")
     state.aktiv_gentag_lyd=True
 

@@ -3,9 +3,9 @@ import random
 
 
 score_tabel = {
-"Plads": [1, 2, 3, 4],
-"Navn": ["Tomas", "Sussi", "Signe", "Simon"],
-"Score": [3, 2, 1, 1]}
+"Plads": [1, 2, 3, 4, 5, 6],
+"Navn": ["Tomas", "Sussi", "Sussi", "Signe", "Tomas", "Simon"],
+"Score": [6, 5, 4, 3, 2, 1]}
 
 
 
