@@ -1,8 +1,6 @@
 import taipy.gui.builder as tgb
 import random
 
-from playsound import playsound
-
 from utilities import play_music
 from score import score_tabel, tjeck_score
 
@@ -31,19 +29,16 @@ score = 0
 def spil(state):
     
     
-           
-    
 
     
     if int(state.tal) == int(state.input_text):
         
         
         state.tal = random.randint(1,100)
-        print(state.tal)
-        
+                
         counter += 1
         state.rigtig_forkert = f"Rigtigt {counter}"
-        playsound('path/to/your/soundfile.mp3')
+        
         
         
 
