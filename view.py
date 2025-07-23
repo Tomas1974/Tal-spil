@@ -94,17 +94,11 @@ def sejr(state):
          
 def nyt_spil(state):
     
-    
     state.sejrs_antal=1
     
-    print(state.score)
     if state.score % 2==0:
         state.spørgsmålsværdi = [] 
-        #state.spørgsmålsværdi = [random.randint(1, 100) for _ in range(1,sejrsantal_for_score+1)]
-        state.spørgsmålsværdi = [1, 10, 12, 100]
-
-    print(state.spørgsmålsværdi)
-    
+        state.spørgsmålsværdi = [random.randint(1, 100) for num in range(1,sejrsantal_for_score+1)]
         
     nyt_spørgsmål(state)
     spørgsmål_respons(state, "", "billeder\\bird.jpg")
