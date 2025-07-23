@@ -39,18 +39,19 @@ def spil(state):
                 
         try:
             indtastet_værdi = int(state.input_text)
-            state.input_text = ""
-                
-            if state.spørgsmålsværdi[state.sejrs_antal-1] == indtastet_værdi: #Rigtig besvarelse
-                rigtig_besvarelse(state)
-                
-            else:
-                forkert_besvarelse(state)
-                
-            
                 
         except ValueError:
+            
             state.rigtig_forkert = f"Indtast et tal"
+        
+
+        state.input_text = ""
+                
+        if state.spørgsmålsværdi[state.sejrs_antal-1] == indtastet_værdi: #Rigtig besvarelse
+            rigtig_besvarelse(state)
+                
+        else:
+            forkert_besvarelse(state)
 
 
 
