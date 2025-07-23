@@ -120,13 +120,10 @@ def nyt_spørgsmål(state):
     if state.score % 2==0:
          state.spil_tekst = f"Spørgsmål {state.sejrs_antal}:  {state.spørgsmålsværdi[state.sejrs_antal-1]}"
     else:
-        if state.spørgsmålsværdi[state.sejrs_antal-1] < 10:
-            state.spil_tekst = f"Spørgsmål {state.sejrs_antal}: X"
-        elif 9 < state.spørgsmålsværdi[state.sejrs_antal-1] and state.spørgsmålsværdi[state.sejrs_antal-1] < 100:
-             state.spil_tekst = f"Spørgsmål {state.sejrs_antal}: XX"
-        else:
-             state.spil_tekst = f"Spørgsmål {state.sejrs_antal}: XXX"
-    
+
+        letters = len(str(state.spørgsmålsværdi[state.sejrs_antal-1]))
+        state.spil_tekst = f"Spørgsmål {state.sejrs_antal}: { "*" * letters}"
+        
     play_music(f"lyd\\{state.spørgsmålsværdi[state.sejrs_antal-1]}.mp3")
     state.aktiv_gentag_lyd=True
 
