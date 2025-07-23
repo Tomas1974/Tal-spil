@@ -1,5 +1,6 @@
 import taipy.gui.builder as tgb
 import random
+from playsound import playsound
 
 input_text = ""
 display_text = ""
@@ -35,6 +36,7 @@ def spil(state):
         
         counter += 1
         state.rigtig_forkert = f"Rigtigt {counter}"
+        playsound('path/to/your/soundfile.mp3')
         
         
     else:
@@ -78,7 +80,7 @@ with tgb.Page() as page:
                 tgb.button("Nyt spil", on_action=nyt_spil)
             
             tgb.text(value="{rigtig_forkert}")
-            tgb.image("{image}")  # Assumes bird.jpg is in the same directory    
+            tgb.image("{image}")  
         
 
         with tgb.layout("100"):
