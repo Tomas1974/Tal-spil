@@ -29,19 +29,6 @@ score = 0
 def spil(state):
     
     
-
-    
-    if int(state.tal) == int(state.input_text):
-        
-        
-        state.tal = random.randint(1,100)
-                
-        counter += 1
-        state.rigtig_forkert = f"Rigtigt {counter}"
-        
-        
-        
-
     if state.sejrs_antal == sejrsantal_for_score+1 or state.start_forfra:
            nyt_spil(state)
                        
