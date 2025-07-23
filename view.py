@@ -123,7 +123,6 @@ def nyt_spørgsmål(state):
         if state.spørgsmålsværdi[state.sejrs_antal-1] < 10:
             state.spil_tekst = f"Spørgsmål {state.sejrs_antal}: X"
         elif 9 < state.spørgsmålsværdi[state.sejrs_antal-1] and state.spørgsmålsværdi[state.sejrs_antal-1] < 100:
-             print(state.spørgsmålsværdi[state.sejrs_antal-1])
              state.spil_tekst = f"Spørgsmål {state.sejrs_antal}: XX"
         else:
              state.spil_tekst = f"Spørgsmål {state.sejrs_antal}: XXX"
