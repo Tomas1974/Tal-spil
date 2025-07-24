@@ -17,9 +17,7 @@ start_forfra = True
 aktiv_gentag_lyd=False
 
 
-
 spørgsmålsværdi = []
-
 
 sejrs_antal = 0
 score = 0
