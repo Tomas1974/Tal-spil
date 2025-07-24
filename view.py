@@ -3,12 +3,18 @@ import random
 
 from utilities import play_music
 from score import score_tabel, tjeck_score
+from models.spil_typer import SkrivTal, SpilType
 
 
-sejrsantal_for_score = 4
+
+talspil = SkrivTal([random.randint(1, 100) for num in range(1, SpilType.sejrsantal_for_score+1)] )
+
+sejrsantal_for_score = SpilType.sejrsantal_for_score
+image = talspil.start_image
+
 input_text = ""
 display_text = ""
-image = "billeder\\bird.jpg"
+
 rigtig_forkert = ""
 spil_tekst = ""
 svar_knap = "Nyt spil"
@@ -60,7 +66,7 @@ def rigtig_besvarelse(state):
     if state.sejrs_antal == sejrsantal_for_score+1:
                 sejr(state)
     else:               
-        spørgsmål_respons(state, "Rigtige", "billeder\\rigtig.gif")
+        spørgsmål_respons(state, "Rigtige", talspil.rigtig_billede)
         nyt_spørgsmål(state)
 
 
@@ -68,7 +74,7 @@ def forkert_besvarelse(state):
 
 
     state.sejrs_antal = 0   #Forkert besvarelse
-    spørgsmål_respons(state, f"Forkert {state.spørgsmålsværdi[state.sejrs_antal-1]}", "billeder\\forkert.gif")
+    spørgsmål_respons(state, f"Forkert {state.spørgsmålsværdi[state.sejrs_antal-1]}", talspil.forkert_billede)
                                                 
     play_music("lyd\\forkert.mp3")
                 
@@ -82,7 +88,7 @@ def forkert_besvarelse(state):
 def sejr(state):
     
     state.score += 1
-    spørgsmål_respons(state, f"Score {state.score}" , "billeder\\Finish.png")
+    spørgsmål_respons(state, f"Score {state.score}" , talspil.sejr_billede)
 
 
     state.svar_knap = "Fortsæt"
@@ -97,10 +103,10 @@ def nyt_spil(state):
     
     if state.score % 2==0:
         state.spørgsmålsværdi = [] 
-        state.spørgsmålsværdi = [random.randint(1, 100) for num in range(1,sejrsantal_for_score+1)]
+        state.spørgsmålsværdi = talspil.spørgsmåls_liste
         
     nyt_spørgsmål(state)
-    spørgsmål_respons(state, "", "billeder\\bird.jpg")
+    spørgsmål_respons(state, "", talspil.start_image)
     
     
     if state.start_forfra:
