@@ -1,32 +1,32 @@
 import taipy.gui.builder as tgb
-import random
 
 from utilities import play_music
 from score import score_tabel, tjeck_score
-from models.spil_typer import SkrivTal, SpilType
+from models.spil_typer import SkrivTal
+from collections.abc import Iterable
 
 
 
-talspil = SkrivTal([random.randint(1, 100) for num in range(1, SpilType.sejrsantal_for_score+1)] )
+spil_type = SkrivTal()
 
-sejrsantal_for_score = SpilType.sejrsantal_for_score
-image = talspil.start_image
+sejrsantal_for_score: int = spil_type.sejrsantal_for_score
+image: str = spil_type.start_image
 
-input_text = ""
-display_text = ""
+input_text: str = ""
+display_text: str = ""
 
-rigtig_forkert = ""
-spil_tekst = ""
-svar_knap = "Nyt spil"
+rigtig_forkert: str = ""
+spil_tekst: str = ""
+svar_knap: str = "Nyt spil"
 
-start_forfra = True
-aktiv_gentag_lyd=False
+start_forfra: bool = True
+aktiv_gentag_lyd: bool=False
 
 
-spørgsmålsværdi = []
+spørgsmålsværdi: Iterable = []
 
-sejrs_antal = 0
-score = 0
+sejrs_antal: int = 0
+score: int = 0
 
     
 
@@ -39,23 +39,25 @@ def spil(state):
 
     else:
         
-        
                 
-        try:
-            indtastet_værdi = int(state.input_text)
                 
-        except ValueError:
-            
-            state.rigtig_forkert = f"Indtast et tal"
-        
+        if spil_type.er_et_tal:
+            try: 
+                indtastet_værdi = int(state.input_text)
+            except:
+                state.rigtig_forkert = f"Indtast et tal"
 
+        
         state.input_text = ""
-                
+                    
         if state.spørgsmålsværdi[state.sejrs_antal-1] == indtastet_værdi: #Rigtig besvarelse
             rigtig_besvarelse(state)
-                
+                    
         else:
             forkert_besvarelse(state)
+        
+        
+             
 
 
 
@@ -66,7 +68,7 @@ def rigtig_besvarelse(state):
     if state.sejrs_antal == sejrsantal_for_score+1:
                 sejr(state)
     else:               
-        spørgsmål_respons(state, "Rigtige", talspil.rigtig_billede)
+        spørgsmål_respons(state, "Rigtige", spil_type.rigtig_billede)
         nyt_spørgsmål(state)
 
 
@@ -74,7 +76,7 @@ def forkert_besvarelse(state):
 
 
     state.sejrs_antal = 0   #Forkert besvarelse
-    spørgsmål_respons(state, f"Forkert {state.spørgsmålsværdi[state.sejrs_antal-1]}", talspil.forkert_billede)
+    spørgsmål_respons(state, f"Forkert {state.spørgsmålsværdi[state.sejrs_antal-1]}", spil_type.forkert_billede)
                                                 
     play_music("lyd\\forkert.mp3")
                 
@@ -88,7 +90,7 @@ def forkert_besvarelse(state):
 def sejr(state):
     
     state.score += 1
-    spørgsmål_respons(state, f"Score {state.score}" , talspil.sejr_billede)
+    spørgsmål_respons(state, f"Score {state.score}" , spil_type.sejr_billede)
 
 
     state.svar_knap = "Fortsæt"
@@ -103,10 +105,10 @@ def nyt_spil(state):
     
     if state.score % 2==0:
         state.spørgsmålsværdi = [] 
-        state.spørgsmålsværdi = talspil.spørgsmåls_liste
+        state.spørgsmålsværdi = spil_type.spørgsmåls_streng()
         
     nyt_spørgsmål(state)
-    spørgsmål_respons(state, "", talspil.start_image)
+    spørgsmål_respons(state, "", spil_type.start_image)
     
     
     if state.start_forfra:

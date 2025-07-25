@@ -1,23 +1,36 @@
-from abc import ABC
+from abc import ABC, abstractmethod
+
+import random
 
 class SpilType(ABC):
-    sejrsantal_for_score = 4
+        
 
-    def __init__(self, spørgsmåls_liste):
+    def __init__(self):
         
-        
-        self.start_image = "billeder\\bird.jpg"
-        self.sejr_billede = "billeder\\Finish.png"
-        self.rigtig_billede =  "billeder\\rigtig.gif"
-        self.forkert_billede = "billeder\\forkert.gif"
-        self.spørgsmåls_liste = spørgsmåls_liste
-        
+        self.sejrsantal_for_score = 4
+        self.start_image: str = "billeder\\bird.jpg"
+        self.sejr_billede: str = "billeder\\Finish.png"
+        self.rigtig_billede: str =  "billeder\\rigtig.gif"
+        self.forkert_billede: str = "billeder\\forkert.gif"
+        self.er_et_tal: bool= False
+
+
+    @abstractmethod
+    def spørgsmåls_streng(self):
+        pass
+
+
 
 
 class SkrivTal(SpilType):
 
-    def __init__(self, spørgsmåls_liste):
-        super().__init__(spørgsmåls_liste)
+    def __init__(self):
+        super().__init__()
+        self.er_et_tal: bool= True
+
+    def spørgsmåls_streng(self) -> list:
+        return [random.randint(1, 100) for num in range(1, self.sejrsantal_for_score+1)]
+    
 
     
 
