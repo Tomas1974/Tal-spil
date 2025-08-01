@@ -1,18 +1,19 @@
+import os
 from abc import ABC, abstractmethod
-
 import random
 
-class SpilType(ABC):
-        
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+class SpilType(ABC):
     def __init__(self):
-        
+
         self.sejrsantal_for_score = 4
-        self.start_image: str = "billeder\\bird.jpg"
-        self.sejr_billede: str = "billeder\\Finish.png"
-        self.rigtig_billede: str =  "billeder\\rigtig.gif"
-        self.forkert_billede: str = "billeder\\forkert.gif"
-        self.er_et_tal: bool= False
+        self.start_image: str = "static/billeder/bird.jpg"
+        self.sejr_billede: str = "static/billeder/Finish.png"
+        self.rigtig_billede: str = "static/billeder/rigtig.gif"
+        self.forkert_billede: str = "static/billeder/forkert.gif"
+
+        self.er_et_tal: bool = False
 
 
     @abstractmethod
