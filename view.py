@@ -78,7 +78,7 @@ def forkert_besvarelse(state):
     state.sejrs_antal = 0   #Forkert besvarelse
     spørgsmål_respons(state, f"Forkert {state.spørgsmålsværdi[state.sejrs_antal-1]}", spil_type.forkert_billede)
                                                 
-    play_music("lyd\\forkert.mp3")
+    play_music("lyd/forkert.mp3")
                 
     state.score_tabel = tjeck_score(state.score)
     state.score = 0
@@ -96,7 +96,7 @@ def sejr(state):
     state.svar_knap = "Fortsæt"
     state.spil_tekst = "Runde gennemført"
     state.aktiv_gentag_lyd=False
-    play_music("lyd\\finish.mp3")
+    play_music("lyd/finish.mp3")
 
          
 def nyt_spil(state):
@@ -131,13 +131,13 @@ def nyt_spørgsmål(state):
         letters = len(str(state.spørgsmålsværdi[state.sejrs_antal-1]))
         state.spil_tekst = f"Spørgsmål {state.sejrs_antal}: { "*" * letters}"
         
-    play_music(f"lyd\\{state.spørgsmålsværdi[state.sejrs_antal-1]}.mp3")
+    play_music(f"lyd/{state.spørgsmålsværdi[state.sejrs_antal-1]}.mp3")
     state.aktiv_gentag_lyd=True
 
 
 
 def gentag(state):
-    play_music(f"lyd\\{state.spørgsmålsværdi[state.sejrs_antal-1]}.mp3")
+    play_music(f"lyd/{state.spørgsmålsværdi[state.sejrs_antal-1]}.mp3")
 
 
 with tgb.Page() as page:
