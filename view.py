@@ -31,6 +31,7 @@ svar_knap: str = "Nyt spil"
 
 start_forfra: bool = True
 aktiv_gentag_lyd: bool=False
+import time
 
 
 spørgsmålsværdi: Iterable = []
@@ -43,6 +44,7 @@ audio_example=""
 
 def create_audio(audio: Audio):
 
+    
     html = f"""
 <audio autoplay controls> <source src="/{audio.path}" type="audio/mp3">
 </audio>
@@ -99,6 +101,7 @@ def forkert_besvarelse(state):
                                                 
     
     state.audio_example=Audio("static/lyd/forkert.mp3")
+    
                
     state.score_tabel = tjeck_score(state.score)
     state.score = 0
@@ -177,7 +180,8 @@ with tgb.Page() as page:
                 tgb.input("{input_text}", on_action=spil, action_keys=["ENTER"] )
                 tgb.button("{svar_knap}", on_action=spil)
                 tgb.button("Gentag lyd", on_action=gentag, active = "{aktiv_gentag_lyd}")
-            
+                
+          
                 
                 
             
@@ -191,7 +195,8 @@ with tgb.Page() as page:
                 tgb.table("{score_tabel}")
         
     with tgb.layout("1px"):
-        tgb.part(content="{audio_example}", height="1px")
+        tgb.part(content="{audio_example}", height="1px") #, render=False
+            
 
 
 
