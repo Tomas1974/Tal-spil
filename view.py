@@ -7,6 +7,16 @@ from collections.abc import Iterable
 
 
 
+class Audio:
+    def __init__(self, path: str, controls=True):
+        self.path=path
+        self.controls=controls
+
+audio_example=""
+
+
+
+
 spil_type = SkrivTal()
 
 sejrsantal_for_score: int = spil_type.sejrsantal_for_score
@@ -27,11 +37,20 @@ spørgsmålsværdi: Iterable = []
 
 sejrs_antal: int = 0
 score: int = 0
-
+audio_example=""
     
+
+
+def create_audio(audio: Audio):
+
+    html = f"""
+<audio autoplay controls> <source src="/{audio.path}" type="audio/mp3">
+</audio>
+"""
+    return html
+
 
 def spil(state):
-    
     
     if state.sejrs_antal == sejrsantal_for_score+1 or state.start_forfra:
            nyt_spil(state)
@@ -78,8 +97,9 @@ def forkert_besvarelse(state):
     state.sejrs_antal = 0   #Forkert besvarelse
     spørgsmål_respons(state, f"Forkert {state.spørgsmålsværdi[state.sejrs_antal-1]}", spil_type.forkert_billede)
                                                 
-    play_music("static/lyd/forkert.mp3")
-                
+    
+    state.audio_example=Audio("static/lyd/forkert.mp3")
+               
     state.score_tabel = tjeck_score(state.score)
     state.score = 0
     state.svar_knap = "Nyt spil"
@@ -96,7 +116,9 @@ def sejr(state):
     state.svar_knap = "Fortsæt"
     state.spil_tekst = "Runde gennemført"
     state.aktiv_gentag_lyd=False
-    play_music("static/lyd/finish.mp3")
+    
+    state.audio_example=Audio("static/lyd/finish.mp3")
+    
 
          
 def nyt_spil(state):
@@ -118,7 +140,7 @@ def nyt_spil(state):
 
 def spørgsmål_respons(state, rigtig_forkert, image):
     state.rigtig_forkert = rigtig_forkert
-    #state.image = image
+    state.image = image
 
 
 def nyt_spørgsmål(state):
@@ -131,14 +153,14 @@ def nyt_spørgsmål(state):
         letters = len(str(state.spørgsmålsværdi[state.sejrs_antal-1]))
         state.spil_tekst = f"Spørgsmål {state.sejrs_antal}: { "*" * letters}"
         
-    play_music(f"static/lyd/{state.spørgsmålsværdi[state.sejrs_antal-1]}.mp3")
+    state.audio_example=Audio(f"static/lyd/{state.spørgsmålsværdi[state.sejrs_antal-1]}.mp3")
+    
     state.aktiv_gentag_lyd=True
 
 
-
 def gentag(state):
-    play_music(f"static/lyd/{state.spørgsmålsværdi[state.sejrs_antal-1]}.mp3")
-    pass
+    state.audio_example=Audio(f"static/lyd/{state.spørgsmålsværdi[state.sejrs_antal-1]}.mp3")
+    
 
 
 with tgb.Page() as page:
@@ -155,6 +177,8 @@ with tgb.Page() as page:
                 tgb.input("{input_text}", on_action=spil, action_keys=["ENTER"] )
                 tgb.button("{svar_knap}", on_action=spil)
                 tgb.button("Gentag lyd", on_action=gentag, active = "{aktiv_gentag_lyd}")
+            
+                
                 
             
             tgb.text(value="{rigtig_forkert}")
@@ -165,6 +189,9 @@ with tgb.Page() as page:
                 with tgb.layout("30 10 20 40"):
                     tgb.text("Score: {score}")
                 tgb.table("{score_tabel}")
+        
+    with tgb.layout("1px"):
+        tgb.part(content="{audio_example}", height="1px")
 
 
 
@@ -173,6 +200,7 @@ with tgb.Page() as page:
  
 
 def get_firstpage():
-    return page
+   return page
     
+
 

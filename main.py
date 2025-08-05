@@ -1,6 +1,9 @@
 from taipy import Gui
-from view import page
+from view import page, Audio, create_audio
 
-gui = Gui(page=page)
 
-app = gui.run(dark_mode=True, run_server=True, use_reloader=False, return_flask_app=True)
+
+
+gui = Gui(page)
+gui.register_content_provider(Audio, create_audio)
+app = gui.run(dark_mode=True, run_server=True)
